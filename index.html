@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hoá đơn dịch vụ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <span class="status" id="status"><span class="dot"></span> Đang kết nối…</span>
+  <span class="mode" id="modeLabel">Đơn mới</span>
+</div>
+<div class="banner" id="selBanner" hidden>
+  <span id="selText">Sếp đang chọn một đơn trong bảng.</span>
+  <button type="button" class="btn-mini" id="openSelBtn">Mở đơn này</button>
+</div>
+<div class="banner warn" id="draftBanner" hidden>
+  <span>Đã khôi phục bản nháp chưa lưu.</span>
+  <button type="button" class="btn-mini" id="discardDraftBtn">Bỏ nháp</button>
+</div>
+
+<main class="desk">
+  <article class="paper" id="paper">
+
+    <header class="inv-head">
+      <div class="brand">
+        <div class="brand-name">SƯƠNG NGUYỄN STUDIO</div>
+        <div class="brand-sub">Ảnh cưới · Gia đình &amp; bé · Makeup</div>
+      </div>
+      <div class="meta">
+        <div class="meta-row"><span class="lbl">Số HĐ</span><span class="so-hd" id="soHD">tự sinh khi lưu</span></div>
+        <div class="meta-row"><label class="lbl" for="bienNhan">Số biên nhận</label><input id="bienNhan" class="ink fill" inputmode="numeric" autocomplete="off"></div>
+        <div class="meta-row"><label class="lbl" for="ngayBN">Ngày</label><input id="ngayBN" type="date" class="ink fill"></div>
+      </div>
+    </header>
+
+    <h1 class="inv-title">HOÁ ĐƠN DỊCH VỤ</h1>
+    <div class="kinds">
+      <span class="lbl">Loại:</span>
+      <label class="tick"><input type="checkbox" id="plGoi" value="GÓI CHỤP"><span class="box" aria-hidden="true"></span>Gói chụp</label>
+      <label class="tick"><input type="checkbox" id="plCombo" value="Combo"><span class="box" aria-hidden="true"></span>Combo</label>
+    </div>
+
+    <section class="cust">
+      <div class="line" id="custPickLine">
+        <span class="lbl">Khách hàng:</span>
+        <div class="grow" id="custBox"></div>
+        <button type="button" class="link-btn" id="newCustBtn">+ Khách mới</button>
+      </div>
+      <div class="newcust" id="newCust" hidden>
+        <div class="line">
+          <label class="lbl" for="ncName">Khách mới:</label>
+          <input id="ncName" class="ink fill grow" placeholder="Tên cô dâu / khách" autocomplete="off">
+          <button type="button" class="link-btn" id="oldCustBtn">Chọn khách cũ</button>
+        </div>
+        <div class="line two">
+          <span class="pair"><label class="lbl" for="ncPhone">Điện thoại:</label><input id="ncPhone" class="ink fill" inputmode="tel" autocomplete="off"></span>
+          <span class="pair"><label class="lbl" for="ncSrc">Nguồn:</label><select id="ncSrc" class="ink fill"></select></span>
+        </div>
+        <div class="dup" id="dupWarn" hidden></div>
+      </div>
+      <div class="line two" id="custInfo">
+        <span class="pair"><span class="lbl">Điện thoại:</span><span class="ink val" id="custPhone"></span></span>
+        <span class="pair"><span class="lbl">Nguồn:</span><span class="ink val" id="custSrc"></span></span>
+      </div>
+    </section>
+
+    <table class="items">
+      <colgroup><col class="c-stt"><col><col class="c-money"><col class="c-x"></colgroup>
+      <thead>
+        <tr><th>STT</th><th>Tên sản phẩm / dịch vụ</th><th class="r">Thành tiền (đ)</th><th class="noprint"></th></tr>
+      </thead>
+      <tbody id="lines"></tbody>
+      <tbody>
+        <tr id="rowInAn" hidden>
+          <td class="stt">•</td>
+          <td>
+            <div class="inan">
+              <span class="tag">In ấn</span>
+              <div class="grow" id="inAnBox"></div>
+              <label class="qty"><span>SL</span><input id="inAnQty" class="ink fill" inputmode="numeric" autocomplete="off"></label>
+            </div>
+            <div class="hint" id="inAnHint"></div>
+          </td>
+          <td class="money"><span class="ink" id="inAnTotal"></span></td>
+          <td class="noprint"><button type="button" class="x" id="rmInAn" aria-label="Bỏ in ấn">×</button></td>
+        </tr>
+        <tr id="rowPhuThu">
+          <td class="stt">•</td>
+          <td><div class="inan"><span class="tag">Phụ thu</span><input id="phuThuDetail" class="ink fill grow" placeholder="chi tiết phụ thu (nếu có)" autocomplete="off"></div></td>
+          <td class="money"><input id="phuThu" class="ink fill money-in" inputmode="numeric" autocomplete="off"></td>
+          <td class="noprint"></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr><td colspan="2" class="r lbl">Cộng tiền dịch vụ</td><td class="money"><span class="ink" id="subTotal">0</span></td><td class="noprint"></td></tr>
+        <tr><td colspan="2" class="r lbl">Chiết khấu</td><td class="money"><input id="chietKhau" class="ink fill money-in" inputmode="numeric" autocomplete="off"></td><td class="noprint"></td></tr>
+        <tr class="grand"><td colspan="2" class="r">TỔNG THANH TOÁN</td><td class="money"><span class="ink" id="grand">0</span></td><td class="noprint"></td></tr>
+      </tfoot>
+    </table>
+    <div class="adders noprint">
+      <button type="button" class="link-btn" id="addLineBtn">+ Thêm dòng dịch vụ</button>
+      <button type="button" class="link-btn" id="addInAnBtn">+ In ấn</button>
+    </div>
+    <p class="words"><span class="lbl">Số tiền viết bằng chữ:</span> <span class="ink" id="words"></span></p>
+
+    <section class="sched">
+      <h2>Lịch hẹn</h2>
+      <div class="line two">
+        <span class="pair"><label class="lbl" for="ngayChup">Ngày chụp:</label><input id="ngayChup" type="datetime-local" class="ink fill"></span>
+        <span class="pair"><label class="lbl" for="ngayHoi">Ngày đám hỏi:</label><input id="ngayHoi" type="datetime-local" class="ink fill"></span>
+      </div>
+      <div id="weddings"></div>
+      <div class="adders noprint"><button type="button" class="link-btn" id="addWedBtn">+ Thêm ngày cưới</button></div>
+    </section>
+
+    <section class="note">
+      <label class="lbl" for="ghiChu">Ghi chú:</label>
+      <textarea id="ghiChu" class="ink" rows="2"></textarea>
+    </section>
+
+    <footer class="sign">
+      <div><b>Khách hàng</b><i>(Ký, ghi rõ họ tên)</i><span class="ink sig" id="sigCust"></span></div>
+      <div><b>Người lập phiếu</b><i>(Ký, ghi rõ họ tên)</i><span class="ink sig" id="sigSeller"></span></div>
+    </footer>
+
+    <div class="stamp" id="stamp" hidden>ĐÃ LƯU</div>
+  </article>
+
+  <div class="actions noprint">
+    <button type="button" class="btn primary" id="saveBtn">Lưu đơn vào bảng 2.1</button>
+    <button type="button" class="btn" id="printBtn">In hoá đơn</button>
+    <button type="button" class="btn" id="newBtn">Đơn mới</button>
+  </div>
+  <p class="foot-note noprint" id="footNote"></p>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
