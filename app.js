@@ -299,6 +299,8 @@ function collect() {
     ngayChup: fromInput($('ngayChup').value),
     ngayHoi: fromInput($('ngayHoi').value),
     cuoi: weds.map((w) => ({ t: fromInput(w.t.value), place: w.p.value.trim() })),
+    ngayLayDo: fromInput($('ngayLayDo').value),
+    ngayNhanHinh: fromInput($('ngayNhanHinh').value),
     ghiChu: $('ghiChu').value.trim(),
   };
 }
@@ -337,6 +339,8 @@ function fill(p) {
     if (x.t != null || x.place) lw = i + 1;
   });
   state.nWed = Math.max(1, lw);
+  $('ngayLayDo').value = toInput(p.ngayLayDo, false);
+  $('ngayNhanHinh').value = toInput(p.ngayNhanHinh, false);
   $('ghiChu').value = p.ghiChu || '';
   layout(); recalc();
 }
@@ -346,7 +350,8 @@ function blankPayload() {
     bienNhan: '', ngayBN: today.getTime(), phanLoai: [], custId: null, custLabel: '',
     items: Array.from({ length: N_LINES }, () => ({ name: '', price: null })),
     inAn: { name: '', qty: null }, phuThu: { detail: '', amount: null }, chietKhau: null,
-    ngayChup: null, ngayHoi: null, cuoi: Array.from({ length: N_WED }, () => ({ t: null, place: '' })), ghiChu: '',
+    ngayChup: null, ngayHoi: null, cuoi: Array.from({ length: N_WED }, () => ({ t: null, place: '' })),
+    ngayLayDo: null, ngayNhanHinh: null, ghiChu: '',
   };
 }
 

@@ -22,12 +22,13 @@ const F = {
   ngayChup: 'fldHw1lsPd', ngayHoi: 'fldorTOFf2',
   cuoi: [['fldHRuGL2Z', 'fldCcddpLz'], ['fldhJZCGWJ', 'fld48hlCl0'], ['fld9kCX5T6', 'fldEVcRLT5'], ['fldxCLirEt', 'fld382mlcC']],
   ghiChu: 'fldvBCsSPI', bienNhan: 'fldqZETlrV', ngayBN: 'fldQjVfDmB', total: 'fldkDC8j2x',
+  ngayLayDo: 'fldGv4gVIA', ngayNhanHinh: 'fldiH0QUo9',
 };
 const FC = { label: 'fldaR8R2HS', name: 'fldUzrGe9R', phone: 'fldXVypinb', src: 'fldvVSjRhk' };
 const FP = { name: 'fldPmDRlea', price: 'fldTapY7Yl', cat: 'fldxGCKDAT' };
 const FI = { name: 'fldZ6QADfH', price: 'fldQNe6h0r' };
 // tên cột lúc viết code — dùng khi ID không khớp (VD: bảng thử nghiệm cùng tên cột)
-const NAMES = { "fld0BKa67A": "SPDV 4", "fld382mlcC": "Địa điểm 4", "fld3WBILsK": "SL In Ấn", "fld48hlCl0": "Địa điểm 2", "fld9kCX5T6": "Ngày đám cưới 3", "fldC84LsXr": "Đơn giá dịch vụ 6", "fldCETxsc3": "Tên khách hàng", "fldCcddpLz": "Địa điểm 1", "fldERfKMDV": "Chiết khấu ($)", "fldETCXWSM": "Phân loại", "fldEVcRLT5": "Địa điểm 3", "fldFxNeMmk": "Đơn giá dịch vụ 1", "fldHRuGL2Z": "Ngày đám cưới 1", "fldHdM9GH3": "Đơn giá dịch vụ 5", "fldHw1lsPd": "Ngày chụp", "fldL5kK6il": "SPDV 3", "fldPK8nVnw": "SPDV 2", "fldPmDRlea": "Sản Phẩm", "fldQ4orEEE": "Sản phẩm chính", "fldQNe6h0r": "Giá bán", "fldQjVfDmB": "Ngày Biên nhận", "fldTapY7Yl": "Giá Bán", "fldUzrGe9R": "Tên Khách Hàng (Cô Dâu)", "fldVgcVeTb": "Chi tiết phụ thu", "fldXVypinb": "Số điện thoại", "fldYXmsLn7": "Phụ thu", "fldZ6QADfH": "Sản Phẩm", "fldZs4Gfak": "Đơn giá dịch vụ 2", "flda610apP": "Sale phụ trách", "fldaMIZ4yU": "Kinh Doanh", "fldaR8R2HS": "Tên Khách Hàng", "fldekDor6s": "SPDV 1", "fldhJZCGWJ": "Ngày đám cưới 2", "fldjU6QXet": "SPDV 5", "fldkDC8j2x": "Tổng Đơn Hàng (VAT)", "fldkeMSxSp": "In Ấn", "fldkt1482D": "Đơn giá sản phẩm chính", "fldo4uAngl": "Ngày tạo hợp đồng", "fldoU5kU2C": "SPDV 6", "fldorTOFf2": "Ngày đám hỏi", "fldqP8bo57": "Đơn giá dịch vụ 4", "fldqZETlrV": "Mã Biên Nhận", "fldsGZDjZc": "Mã hợp đồng.", "fldt02CP2c": "Đơn giá dịch vụ 3", "fldvBCsSPI": "Ghi chú", "fldvVSjRhk": "Nguồn khách hàng", "fldxCLirEt": "Ngày đám cưới 4", "fldxGCKDAT": "Danh Mục" };
+const NAMES = { "fld0BKa67A": "SPDV 4", "fld382mlcC": "Địa điểm 4", "fld3WBILsK": "SL In Ấn", "fld48hlCl0": "Địa điểm 2", "fld9kCX5T6": "Ngày đám cưới 3", "fldC84LsXr": "Đơn giá dịch vụ 6", "fldCETxsc3": "Tên khách hàng", "fldCcddpLz": "Địa điểm 1", "fldERfKMDV": "Chiết khấu ($)", "fldETCXWSM": "Phân loại", "fldEVcRLT5": "Địa điểm 3", "fldFxNeMmk": "Đơn giá dịch vụ 1", "fldHRuGL2Z": "Ngày đám cưới 1", "fldHdM9GH3": "Đơn giá dịch vụ 5", "fldHw1lsPd": "Ngày chụp", "fldL5kK6il": "SPDV 3", "fldPK8nVnw": "SPDV 2", "fldPmDRlea": "Sản Phẩm", "fldQ4orEEE": "Sản phẩm chính", "fldQNe6h0r": "Giá bán", "fldQjVfDmB": "Ngày Biên nhận", "fldTapY7Yl": "Giá Bán", "fldUzrGe9R": "Tên Khách Hàng (Cô Dâu)", "fldVgcVeTb": "Chi tiết phụ thu", "fldXVypinb": "Số điện thoại", "fldYXmsLn7": "Phụ thu", "fldZ6QADfH": "Sản Phẩm", "fldZs4Gfak": "Đơn giá dịch vụ 2", "flda610apP": "Sale phụ trách", "fldaMIZ4yU": "Kinh Doanh", "fldaR8R2HS": "Tên Khách Hàng", "fldekDor6s": "SPDV 1", "fldhJZCGWJ": "Ngày đám cưới 2", "fldjU6QXet": "SPDV 5", "fldkDC8j2x": "Tổng Đơn Hàng (VAT)", "fldkeMSxSp": "In Ấn", "fldkt1482D": "Đơn giá sản phẩm chính", "fldo4uAngl": "Ngày tạo hợp đồng", "fldoU5kU2C": "SPDV 6", "fldorTOFf2": "Ngày đám hỏi", "fldqP8bo57": "Đơn giá dịch vụ 4", "fldqZETlrV": "Mã Biên Nhận", "fldsGZDjZc": "Mã hợp đồng.", "fldt02CP2c": "Đơn giá dịch vụ 3", "fldvBCsSPI": "Ghi chú", "fldvVSjRhk": "Nguồn khách hàng", "fldxCLirEt": "Ngày đám cưới 4", "fldxGCKDAT": "Danh Mục", "fldGv4gVIA": "Ngày lấy đồ", "fldiH0QUo9": "Ngày nhận hình" };
 const ORDER_READ = [F.soHD, F.cust, F.phanLoai, F.seller, F.salePT, F.created, F.total, F.phuThuDetail, F.phuThu, F.chietKhau,
   F.inAn, F.inAnQty, F.ngayChup, F.ngayHoi, F.ghiChu, F.bienNhan, F.ngayBN, ...F.items.flat(), ...F.cuoi.flat()];
 
@@ -239,6 +240,8 @@ function toFields(p, m) {
     put(ft, w.t ?? null);
     put(fpl, s(w.place));
   });
+  put(F.ngayLayDo, p.ngayLayDo ?? null);
+  put(F.ngayNhanHinh, p.ngayNhanHinh ?? null);
   put(F.ghiChu, s(p.ghiChu));
   return f;
 }
@@ -257,6 +260,8 @@ function fromFields(f) {
     ngayChup: num(f[F.ngayChup]),
     ngayHoi: num(f[F.ngayHoi]),
     cuoi: F.cuoi.map(([ft, fpl]) => ({ t: num(f[ft]), place: txt(f[fpl]) })),
+    ngayLayDo: num(f[F.ngayLayDo]),
+    ngayNhanHinh: num(f[F.ngayNhanHinh]),
     ghiChu: txt(f[F.ghiChu]),
   };
 }

@@ -27,6 +27,7 @@ const F = {
   ngayChup: 'fldHw1lsPd', ngayHoi: 'fldorTOFf2',
   cuoi: [['fldHRuGL2Z', 'fldCcddpLz'], ['fldhJZCGWJ', 'fld48hlCl0'], ['fld9kCX5T6', 'fldEVcRLT5'], ['fldxCLirEt', 'fld382mlcC']],
   ghiChu: 'fldvBCsSPI', bienNhan: 'fldqZETlrV', ngayBN: 'fldQjVfDmB', total: 'fldkDC8j2x',
+  ngayLayDo: 'fldGv4gVIA', ngayNhanHinh: 'fldiH0QUo9',
 };
 const FC = { label: 'fldaR8R2HS', name: 'fldUzrGe9R', phone: 'fldXVypinb', src: 'fldvVSjRhk' };
 const FP = { name: 'fldPmDRlea', price: 'fldTapY7Yl', cat: 'fldxGCKDAT' };
@@ -198,6 +199,8 @@ function toFields(p) {
     f[ft] = w.t ?? null;
     f[fpl] = seg(w.place);
   });
+  f[F.ngayLayDo] = p.ngayLayDo ?? null;
+  f[F.ngayNhanHinh] = p.ngayNhanHinh ?? null;
   f[F.ghiChu] = seg(p.ghiChu);
   return f;
 }
@@ -218,6 +221,8 @@ function fromFields(fields) {
     ngayChup: num(g(F.ngayChup)),
     ngayHoi: num(g(F.ngayHoi)),
     cuoi: F.cuoi.map(([ft, fpl]) => ({ t: num(g(ft)), place: txt(g(fpl)) })),
+    ngayLayDo: num(g(F.ngayLayDo)),
+    ngayNhanHinh: num(g(F.ngayNhanHinh)),
     ghiChu: txt(g(F.ghiChu)),
   };
 }
