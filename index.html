@@ -13,7 +13,33 @@
 
 <div class="topbar">
   <span class="status" id="status"><span class="dot"></span> Đang kết nối…</span>
-  <span class="mode" id="modeLabel">Đơn mới</span>
+  <span class="topright">
+    <span class="mode" id="modeLabel">Đơn mới</span>
+    <span class="who" id="who" hidden><span id="whoName"></span> · <button type="button" class="link-plain" id="logoutBtn">Đăng xuất</button></span>
+  </span>
+</div>
+
+<div class="login" id="login" hidden>
+  <form class="login-card" id="loginForm" autocomplete="off">
+    <div class="brand-name">SƯƠNG NGUYỄN STUDIO</div>
+    <div class="login-title">Sổ hoá đơn dịch vụ</div>
+    <label for="loginCode">Mã nhân viên</label>
+    <input id="loginCode" class="login-input" autocapitalize="characters" autocorrect="off" spellcheck="false" placeholder="VD: AB12-CD34" inputmode="text">
+    <button type="submit" class="btn primary" id="loginBtn">Mở sổ</button>
+    <p class="login-err" id="loginErr" role="alert"></p>
+    <p class="login-hint">Mỗi người một mã riêng. Đơn lưu sẽ ghi tên Sếp/bạn vào cột "Sale phụ trách".</p>
+  </form>
+</div>
+
+<div class="sheet" id="orderSheet" hidden>
+  <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <b id="sheetTitle">Mở đơn cũ</b>
+      <button type="button" class="btn-mini" id="closeSheetBtn">Đóng</button>
+    </div>
+    <input id="orderSearch" class="sheet-search" placeholder="Tìm số HĐ, tên khách, mã KH…" autocomplete="off">
+    <div class="order-list" id="orderList"></div>
+  </div>
 </div>
 <div class="banner" id="selBanner" hidden>
   <span id="selText">Sếp đang chọn một đơn trong bảng.</span>
@@ -136,6 +162,7 @@
     <button type="button" class="btn primary" id="saveBtn">Lưu đơn vào bảng 2.1</button>
     <button type="button" class="btn" id="printBtn">In hoá đơn</button>
     <button type="button" class="btn" id="newBtn">Đơn mới</button>
+    <button type="button" class="btn" id="openOldBtn" hidden>Mở đơn cũ</button>
   </div>
   <p class="foot-note noprint" id="footNote"></p>
 </main>

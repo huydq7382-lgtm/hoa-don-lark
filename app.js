@@ -433,7 +433,7 @@ function enterEdit(res, { justSaved = false } = {}) {
   fill(res.payload);
   $('soHD').textContent = res.soHD || '(chưa có số)'; $('soHD').classList.remove('pending');
   $('sigSeller').textContent = res.seller || '';
-  $('modeLabel').textContent = 'Đang xem / sửa ' + (res.soHD || '');
+  $('modeLabel').textContent = 'Sửa ' + (res.soHD || 'đơn');
   $('saveBtn').textContent = 'Lưu thay đổi';
   $('draftBanner').hidden = true;
   $('selBanner').hidden = true;
@@ -488,6 +488,12 @@ async function save() {
   } catch (e) {
     console.error(e);
     btn.textContent = label;
+    if (e && e.auth && api.login) {
+      state.busy = false; btn.disabled = false;
+      await askLogin(api, 'Phiên đăng nhập đã hết. Nhập lại mã rồi bấm Lưu lần nữa (phiếu vẫn giữ nguyên).');
+      toast('Đã đăng nhập lại — bấm Lưu lần nữa.', 'ok');
+      return;
+    }
     toast('Chưa lưu được: ' + (e && e.message ? e.message : e), 'bad');
   } finally {
     state.busy = false; btn.disabled = false;
@@ -496,16 +502,17 @@ async function save() {
 }
 
 async function openOrder(id) {
+  const live = api.mode === 'worker' ? 'Đã kết nối bảng 2.1 Tạo đơn hàng' : 'Đã nối Lark · bảng 2.1 Tạo đơn hàng';
   try {
     $('selBanner').hidden = true;
     setStatus('live', 'Đang mở đơn…');
     const res = await api.loadOrder(id);
     enterEdit(res);
-    setStatus('live', 'Đã nối Lark · bảng 2.1 Tạo đơn hàng');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (e) {
     toast('Không mở được đơn: ' + (e.message || e), 'bad');
-    setStatus('live', 'Đã nối Lark · bảng 2.1 Tạo đơn hàng');
   }
+  setStatus('live', live);
 }
 
 let selTimer;
@@ -523,16 +530,85 @@ function onSelected(id) {
   }, 350);
 }
 
+// ---------- "Mở đơn cũ" (web app riêng không có ô chọn dòng của Lark) ----------
+function setupOrderSheet() {
+  const sheet = $('orderSheet'), listEl = $('orderList'), search = $('orderSearch');
+  let orders = null, loading = false;
+  const fmtDate = (ts) => { if (!ts) return ''; const d = new Date(ts); return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`; };
+  function render() {
+    listEl.textContent = '';
+    if (!orders) { listEl.innerHTML = '<div class="order-empty">Đang tải…</div>'; return; }
+    const q = norm(search.value), qd = digits(search.value);
+    const rows = orders.filter((o) => !q || norm(`${o.soHD} ${o.cust} ${o.seller}`).includes(q) || (qd.length >= 2 && digits(o.soHD).includes(qd))).slice(0, 120);
+    if (!rows.length) { listEl.innerHTML = '<div class="order-empty">Không thấy đơn nào.</div>'; return; }
+    for (const o of rows) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'order-row';
+      const no = document.createElement('span'); no.className = 'no'; no.textContent = o.soHD || '—';
+      const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = custName(o.cust) || '(chưa có khách)';
+      const amt = document.createElement('span'); amt.className = 'amt'; amt.textContent = o.total != null ? fmt(o.total) + 'đ' : '';
+      const sm = document.createElement('span'); sm.className = 'sm'; sm.textContent = [fmtDate(o.created), o.seller].filter(Boolean).join(' · ');
+      b.append(no, nm, amt, sm);
+      b.addEventListener('click', () => { sheet.hidden = true; openOrder(o.id); });
+      listEl.append(b);
+    }
+  }
+  async function load() {
+    if (loading) return;
+    loading = true; orders = null; render();
+    try { orders = await api.listOrders(); } catch (e) {
+      listEl.innerHTML = ''; const d = document.createElement('div'); d.className = 'order-empty'; d.textContent = 'Không tải được: ' + (e.message || e); listEl.append(d);
+      loading = false; return;
+    }
+    loading = false; render();
+  }
+  $('openOldBtn').hidden = false;
+  $('openOldBtn').addEventListener('click', () => { sheet.hidden = false; search.value = ''; load(); setTimeout(() => search.focus(), 50); });
+  $('closeSheetBtn').addEventListener('click', () => { sheet.hidden = true; });
+  sheet.addEventListener('click', (e) => { if (e.target === sheet) sheet.hidden = true; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) sheet.hidden = true; });
+  search.addEventListener('input', render);
+}
+
 function applyTheme(t) {
   if (t === 'DARK') document.documentElement.dataset.theme = 'dark';
   else if (t === 'LIGHT') document.documentElement.dataset.theme = 'light';
 }
 
 // ---------- khởi động ----------
+function askLogin(api, message = '') {
+  return new Promise((resolve) => {
+    const box = $('login'), form = $('loginForm'), input = $('loginCode'), err = $('loginErr'), btn = $('loginBtn');
+    box.hidden = false; err.textContent = message; input.value = '';
+    setTimeout(() => input.focus(), 50);
+    form.onsubmit = async (ev) => {
+      ev.preventDefault();
+      btn.disabled = true; err.textContent = '';
+      try {
+        const r = await api.login(input.value);
+        box.hidden = true; form.onsubmit = null;
+        resolve(r);
+      } catch (e) {
+        err.textContent = e.message || 'Mã không đúng.';
+        input.select();
+      } finally { btn.disabled = false; }
+    };
+  });
+}
+
 async function pickAdapter() {
   const forceDemo = new URLSearchParams(location.search).has('demo');
   const inFrame = window.self !== window.top;
   let larkError = null;
+  if (!forceDemo && !inFrame && /^https?:$/.test(location.protocol)) {
+    let m = null, me = null;
+    try { m = await import('./data-worker.js'); me = await m.probe(); } catch (_) { m = null; }   // không phải máy chủ hoá đơn
+    if (m) {
+      if (!me) me = await askLogin(m);
+      setStatus('live', 'Đang tải danh sách khách & gói…');
+      return { m, d: await m.init(), kind: 'worker', me };
+    }
+  }
   if (!forceDemo && inFrame) {
     try {
       const m = await import('./data-lark.js');
@@ -597,7 +673,15 @@ async function main() {
   $('openSelBtn').addEventListener('click', () => state.pendingSel && openOrder(state.pendingSel));
   window.addEventListener('beforeprint', layout);
 
-  if (picked.kind === 'lark') {
+  if (picked.kind === 'worker') {
+    setStatus('live', 'Đã kết nối bảng 2.1 Tạo đơn hàng');
+    $('whoName').textContent = data.userName || (picked.me && picked.me.name) || '';
+    $('who').hidden = false;
+    $('logoutBtn').addEventListener('click', async () => {
+      try { await api.logout(); } catch (_) {}
+      location.reload();
+    });
+  } else if (picked.kind === 'lark') {
     setStatus('live', 'Đã nối Lark · bảng 2.1 Tạo đơn hàng');
     applyTheme(await api.getTheme());
     api.onTheme(applyTheme);
@@ -607,6 +691,8 @@ async function main() {
   } else {
     setStatus('demo', 'Bản xem thử — dữ liệu mẫu, không ghi vào Lark');
   }
+
+  if (typeof api.listOrders === 'function') setupOrderSheet();
 
   enterNew();
   if (picked.kind === 'lark') {
