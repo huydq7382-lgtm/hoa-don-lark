@@ -3,7 +3,8 @@
 set -e
 cd "$(dirname "$0")"
 rm -rf public && mkdir public
-cp ../index.html ../style.css ../app.js ../data-worker.js ../data-demo.js public/
+cp ../index.html ../style.css ../app.js ../data-worker.js ../data-demo.js ../manifest.webmanifest public/
+mkdir -p public/icons && cp ../icons/*.png public/icons/
 npx -y wrangler@4 deploy
 if [[ "$1" == "--secrets" ]]; then
   python3 -I -c "import json,os;print(json.load(open(os.path.expanduser('~/.claude.json')))['mcpServers']['lark']['env']['LARK_APP_SECRET'],end='')" | npx -y wrangler@4 secret put LARK_APP_SECRET
